@@ -1,0 +1,2002 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <title>Kinza's Space • Ramadan 1447 Legacy OS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Outfit:wght@200;400;600;800&display=swap" rel="stylesheet">
+    <style>  
+    :root {
+        --bg: #020617;
+        --sidebar: rgba(7, 10, 25, 0.95);
+        --teal: #2dd4bf;
+        --gold: #f59e0b;
+        --gold-light: #fbbf24;
+        --gold-glow: rgba(245, 158, 11, 0.55);
+        --border: rgba(245, 158, 11, 0.28);
+        --glass-bright: rgba(255, 255, 255, 0.09);
+        --glass-dark: rgba(0, 0, 0, 0.62);
+        --ashra1: #10b981;
+        --ashra2: #3b82f6;
+        --ashra3: #ef4444;
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        outline: none;
+    }
+
+    /* ── CINEMATIC OVERLAY ── */
+    #cinematic-overlay {
+        position: fixed;
+        inset: 0;
+        background: radial-gradient(circle at center, #0f172a 0%, #02040f 85%);
+        z-index: 6000;
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        transition: opacity 2s ease;
+    }
+
+    .cinematic-fog {
+        position: absolute;
+        inset: 0;
+        background: 
+            radial-gradient(circle at 25% 30%, rgba(245,158,11,0.12), transparent 60%),
+            radial-gradient(circle at 75% 70%, rgba(255,255,255,0.08), transparent 65%);
+        animation: cinematicFog 18s infinite alternate ease-in-out;
+        pointer-events: none;
+    }
+
+    @keyframes cinematicFog {
+        0%   { transform: scale(1) translate(0, 0); opacity: 0.75; }
+        100% { transform: scale(1.15) translate(30px, -40px); opacity: 1; }
+    }
+
+    .cinematic-corner {
+        position: absolute;
+        width: 140px;
+        height: 140px;
+        border: 3px solid var(--gold-light);
+        opacity: 0.25;
+        border-radius: 30px;
+    }
+
+    .top-left-c    { top: 60px; left: 60px; border-right: none; border-bottom: none; }
+    .bottom-right-c { bottom: 60px; right: 60px; border-left: none; border-top: none; }
+
+    .majestic-moon {
+        font-size: 8.5rem;
+        color: var(--gold);
+        margin-bottom: 20px;
+        filter: drop-shadow(0 0 80px var(--gold-glow)) drop-shadow(0 0 140px #fff);
+        animation: moonFloat 5s ease-in-out infinite, moonSuperGlow 4s infinite alternate;
+    }
+
+    @keyframes moonFloat {
+        0%, 100% { transform: translateY(0); }
+        50%      { transform: translateY(-25px); }
+    }
+
+    @keyframes moonSuperGlow {
+        0%   { text-shadow: 0 0 40px var(--gold), 0 0 90px #fff; }
+        100% { text-shadow: 0 0 80px var(--gold-light), 0 0 160px #fff; }
+    }
+
+    .urdu-master {
+        font-family: 'Amiri', serif;
+        font-size: 7.8rem;
+        line-height: 1.05;
+        color: var(--gold-light);
+        text-align: center;
+        text-shadow: 0 0 60px var(--gold-glow), 0 0 110px rgba(251,191,36,0.6);
+        margin-bottom: 15px;
+        direction: rtl;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .urdu-word {
+        opacity: 0;
+        transform: translateY(40px) scale(0.85);
+        filter: blur(12px);
+        transition: all 1.8s cubic-bezier(0.23, 1, 0.32, 1);
+    }
+
+    .urdu-word.visible {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+        filter: blur(0);
+        animation: wordShimmer 4s infinite alternate;
+    }
+
+    @keyframes wordShimmer {
+        0%   { text-shadow: 0 0 30px var(--gold); }
+        100% { text-shadow: 0 0 90px var(--gold-light), 0 0 150px #fff; }
+    }
+
+    .english-blessing {
+        font-family: 'Outfit', sans-serif;
+        font-size: 1.65rem;
+        letter-spacing: 6px;
+        color: #e0f2fe;
+        opacity: 0;
+        margin-top: 20px;
+        text-transform: uppercase;
+        font-weight: 300;
+        transition: all 2.5s ease 1.2s;
+    }
+
+    .english-blessing.visible {
+        opacity: 0.9;
+        letter-spacing: 12px;
+    }
+
+    .continue-hint {
+        position: absolute;
+        bottom: 70px;
+        color: #f1f5f9;
+        text-align: center;
+        cursor: pointer;
+        opacity: 0;
+        transition: all 2.5s 5s;
+        letter-spacing: 5px;
+        text-transform: uppercase;
+        font-size: 0.85rem;
+        padding: 18px 40px;
+        border: 2px solid var(--gold-light);
+        border-radius: 50px;
+        backdrop-filter: blur(12px);
+        box-shadow: 0 0 40px var(--gold-glow);
+    }
+
+    .continue-hint.visible   { opacity: 1; }
+    .continue-hint:hover     { background: var(--gold); color: #020617; transform: scale(1.08); box-shadow: 0 0 60px var(--gold-glow); }
+
+    /* ── WELCOME PAGE ── */
+    #welcome-page {
+        position: fixed;
+        inset: 0;
+        z-index: 5000;
+        background: url('https://i0.wp.com/picjumbo.com/wp-content/uploads/ramadan-kareem-illustrated-greeting-card-background-space-for-text-free-photo.jpeg?w=2210&quality=70') center top / cover no-repeat;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: 1.8s cubic-bezier(0.65, 0, 0.35, 1);
+    }
+
+    .welcome-arch {
+        width: 420px;
+        height: 580px;
+        background: rgba(3, 6, 28, 0.96);
+        backdrop-filter: blur(20px);
+        border: 3px solid var(--gold);
+        border-radius: 200px 200px 50px 50px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 50px 30px;
+        cursor: pointer;
+        box-shadow: 0 0 80px rgba(0,0,0,0.9), 0 0 40px var(--gold-glow);
+        transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.4);
+    }
+
+    .welcome-arch:hover {
+        transform: scale(1.06) rotate(1deg);
+        border-color: var(--gold-light);
+        box-shadow: 0 0 100px var(--gold-glow);
+    }
+
+    .bismillah {
+        font-family: 'Amiri', serif;
+        font-size: 2.4rem;
+        color: var(--gold-light);
+        margin-bottom: 12px;
+        animation: bismGlow 3s ease-in-out infinite alternate;
+        text-shadow: 0 0 35px var(--gold);
+    }
+
+    @keyframes bismGlow {
+        from { text-shadow: 0 0 25px var(--gold); }
+        to   { text-shadow: 0 0 70px var(--gold-light), 0 0 110px #fff; }
+    }
+
+    .welcome-arch h1 {
+        font-family: 'Amiri', serif;
+        font-size: 4.1rem;
+        color: var(--gold);
+        margin: 15px 0 8px;
+        text-shadow: 0 0 50px var(--gold-glow);
+        line-height: 1;
+    }
+
+    .welcome-arch .subtitle {
+        font-size: 1.05rem;
+        letter-spacing: 6px;
+        opacity: 0.85;
+        text-transform: uppercase;
+        color: var(--teal);
+        font-weight: 600;
+    }
+
+    .welcome-pulse {
+        margin-top: 50px;
+        color: var(--gold);
+        font-weight: 800;
+        letter-spacing: 4px;
+        font-size: 0.85rem;
+        padding: 16px 38px;
+        border: 2px solid var(--gold);
+        border-radius: 50px;
+        animation: pulseGold 2.2s infinite;
+    }
+
+    @keyframes pulseGold {
+        0%, 100% { transform: scale(1); }
+        50%      { transform: scale(1.08); }
+    }
+
+    /* ── GLOBAL LAYOUT ── */
+    body {
+        font-family: 'Outfit', sans-serif;
+        background: var(--bg);
+        color: #f1f5f9;
+        height: 100vh;
+        display: flex;
+        overflow: hidden;
+    }
+
+    #bg-canvas {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        z-index: -1;
+        pointer-events: none;
+    }
+
+    .eternal-bg {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: radial-gradient(circle at 50% 50%, #0f172a 0%, #020617 100%);
+        z-index: -2;
+    }
+
+    /* ── LANTERNS ── */
+    .lantern-container {
+        position: fixed;
+        top: -20px;
+        width: 100%;
+        height: 300px;
+        pointer-events: none;
+        z-index: 10;
+        display: flex;
+        justify-content: space-around;
+        opacity: 0;
+        transition: 2.2s ease-in-out;
+    }
+
+    .loaded .lantern-container {
+        opacity: 1;
+        top: 0;
+    }
+
+    .lantern {
+        width: 60px;
+        height: 100px;
+        background: var(--gold);
+        clip-path: polygon(20% 0%, 80% 0%, 100% 20%, 100% 80%, 80% 100%, 20% 100%, 0% 80%, 0% 20%);
+        box-shadow: 0 0 45px var(--gold-glow);
+        position: relative;
+        animation: sway 4.5s ease-in-out infinite alternate;
+        transform-origin: top center;
+    }
+
+    .lantern::after {
+        content: '';
+        position: absolute;
+        inset: 5px;
+        background: rgba(0,0,0,0.45);
+        clip-path: inherit;
+    }
+
+    @keyframes sway {
+        from { transform: rotate(-6deg); }
+        to   { transform: rotate(6deg); }
+    }
+
+    /* ── SIDEBAR ── */
+    nav {
+        width: 340px;
+        background: var(--sidebar);
+        backdrop-filter: blur(50px);
+        border-right: 1px solid var(--border);
+        padding: 40px 25px;
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        box-shadow: 25px 0 60px rgba(0,0,0,0.6);
+        overflow-y: auto;
+        opacity: 0;
+        transform: translateX(-100px);
+        transition: 1.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+
+    .logo-section { text-align: center; margin-bottom: 30px; }
+
+    .logo-arabic {
+        font-family: 'Amiri', serif;
+        font-size: 3.6rem;
+        color: var(--gold);
+        line-height: 1;
+        text-shadow: 0 0 35px var(--gold-glow);
+    }
+
+    .nav-label {
+        font-size: 0.68rem;
+        color: var(--gold);
+        font-weight: 800;
+        letter-spacing: 2.5px;
+        margin: 28px 0 8px 10px;
+        text-transform: uppercase;
+        opacity: 0.75;
+    }
+
+    .nav-btn {
+        background: transparent;
+        border: 1px solid transparent;
+        color: #94a3b8;
+        padding: 15px 20px;
+        border-radius: 18px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        transition: 0.35s;
+        font-size: 0.96rem;
+    }
+
+    .nav-btn:hover {
+        background: var(--glass-bright);
+        color: white;
+        transform: translateX(8px);
+    }
+
+    .nav-btn.active {
+        background: linear-gradient(90deg, rgba(245,158,11,0.22), transparent);
+        border-left: 5px solid var(--gold);
+        color: white;
+        font-weight: 600;
+    }
+
+    /* ── MAIN CONTENT ── */
+    main {
+        flex: 1;
+        padding: 40px 60px;
+        overflow-y: auto;
+        scroll-behavior: smooth;
+        position: relative;
+        opacity: 0;
+        transition: 1.6s 0.4s;
+    }
+
+    .view {
+        display: none;
+        animation: viewIn 1.1s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .view.active { display: block; }
+
+    @keyframes viewIn {
+        from { opacity: 0; transform: translateY(50px) scale(0.97); }
+        to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .card {
+        background: var(--glass-dark);
+        backdrop-filter: blur(30px);
+        border: 1px solid var(--border);
+        border-radius: 35px;
+        padding: 40px;
+        margin-bottom: 30px;
+        position: relative;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.55);
+    }
+
+    .hero-row {
+        display: grid;
+        grid-template-columns: 1.6fr 1fr;
+        gap: 30px;
+    }
+
+    .ayah-text {
+        font-family: 'Amiri', serif;
+        font-size: 3.3rem;
+        text-align: right;
+        color: var(--gold-light);
+        line-height: 1.65;
+        margin: 20px 0;
+    }
+
+    /* ── CALENDAR ── */
+    .cal-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+        gap: 15px;
+    }
+
+    .day-node {
+        background: var(--glass-dark);
+        border: 1px solid var(--border);
+        border-radius: 25px;
+        padding: 20px;
+        text-align: center;
+        cursor: pointer;
+        transition: 0.4s;
+    }
+
+    .day-node:hover {
+        border-color: var(--gold);
+        transform: translateY(-10px);
+        background: var(--glass-bright);
+        box-shadow: 0 10px 30px var(--gold-glow);
+    }
+
+    .day-node.today {
+        border: 3px solid var(--gold);
+        background: rgba(245,158,11,0.18);
+        box-shadow: 0 0 30px var(--gold-glow);
+        animation: todayPulse 2s infinite alternate;
+    }
+
+    @keyframes todayPulse {
+        from { box-shadow: 0 0 20px var(--gold-glow); }
+        to   { box-shadow: 0 0 45px var(--gold); }
+    }
+
+    /* ── TRACKER (Prayer & Spiritual) ── */
+    .prayer-grid .track-item {
+        background: rgba(255,255,255,0.04);
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        padding: 18px 22px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        user-select: none;
+    }
+
+    .prayer-grid .track-item:hover {
+        background: rgba(255,255,255,0.08);
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+    }
+
+    .prayer-grid .track-item.active {
+        background: rgba(245,158,11,0.15);
+        border-color: var(--gold);
+        box-shadow: 0 0 20px var(--gold-glow);
+    }
+
+    .track-bar {
+        width: 38px;
+        height: 38px;
+        border: 2.5px solid var(--gold);
+        border-radius: 12px;
+        position: relative;
+        overflow: hidden;
+        flex-shrink: 0;
+    }
+
+    .track-fill {
+        position: absolute;
+        inset: 0;
+        background: var(--gold);
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.4);
+    }
+
+    .track-item.active .track-fill {
+        transform: scaleX(1);
+    }
+
+    .special-item small {
+        color: var(--teal);
+        font-weight: 500;
+    }
+
+    /* ── TASBIH ── */
+    .tasbih-core {
+        width: 320px;
+        height: 320px;
+        margin: 0 auto;
+        border-radius: 50%;
+        background: conic-gradient(var(--gold) 0% var(--p, 0%), transparent var(--p, 0%) 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: 0.3s ease;
+    }
+
+    .tasbih-inner {
+        width: 280px;
+        height: 280px;
+        background: #020617;
+        border-radius: 50%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        z-index: 2;
+        box-shadow: inset 0 0 30px rgba(0,0,0,1);
+    }
+
+    /* ── INPUTS & BUTTONS ── */
+    textarea, input, select {
+        width: 100%;
+        background: rgba(0,0,0,0.5);
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        padding: 18px;
+        color: white;
+        font-family: inherit;
+        margin-top: 10px;
+    }
+
+    textarea:focus, input:focus, select:focus {
+        border-color: var(--gold);
+        box-shadow: 0 0 15px var(--gold-glow);
+    }
+
+    .btn-action {
+        background: var(--gold);
+        border: none;
+        padding: 16px 32px;
+        border-radius: 14px;
+        font-weight: 800;
+        cursor: pointer;
+        transition: 0.3s;
+        margin-top: 10px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    }
+
+    .btn-action:hover {
+        background: var(--gold-light);
+        transform: translateY(-3px);
+    }
+
+    /* ── LOADED STATES ── */
+    .loaded #welcome-page {
+        opacity: 0;
+        visibility: hidden;
+        transform: scale(1.12) translateY(-60px);
+    }
+
+    .loaded nav  { opacity: 1; transform: translateX(0); }
+    .loaded main { opacity: 1; }
+
+    /* ── GUIDANCE MODAL ── */
+    #guidance-modal {
+        position: fixed;
+        inset: 0;
+        background: rgba(2,6,23,0.96);
+        z-index: 7000;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        backdrop-filter: blur(12px);
+    }
+
+    /* ── JOURNAL & DUA LIST ── */
+    .emoji-btn {
+        background: rgba(255,255,255,0.08);
+        border: 1px solid var(--border);
+        border-radius: 50%;
+        width: 42px;
+        height: 42px;
+        font-size: 1.4rem;
+        cursor: pointer;
+        transition: all 0.25s;
+    }
+
+    .emoji-btn:hover {
+        transform: scale(1.15);
+        background: rgba(45,212,191,0.25);
+        border-color: var(--teal);
+    }
+
+    #dua-list-container::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    #dua-list-container::-webkit-scrollbar-thumb {
+        background: var(--gold);
+        border-radius: 10px;
+    }
+
+    #dua-list-container .dua-item {
+        background: rgba(245,158,11,0.08);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 14px 18px;
+        margin: 10px 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transition: all 0.3s;
+    }
+
+    #dua-list-container .dua-item.high {
+        background: rgba(239,68,68,0.15);
+        border-color: var(--ashra3);
+    }
+
+    #dua-list-container .dua-item .remove-btn {
+        background: transparent;
+        border: none;
+        color: #ef4444;
+        font-size: 1.3rem;
+        cursor: pointer;
+        padding: 0 8px;
+    }
+
+    #dua-list-container .dua-item:hover {
+        transform: translateX(4px);
+        box-shadow: 0 4px 15px rgba(245,158,11,0.2);
+    }
+
+    /* ── TASBIH DHKR BUTTONS ── */
+    .dhikr-btn {
+        background: rgba(255,255,255,0.06);
+        border: 1px solid var(--border);
+        color: #e0f2fe;
+        padding: 12px 28px;
+        border-radius: 30px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.3s;
+    }
+
+    .dhikr-btn:hover {
+        background: rgba(245,158,11,0.18);
+        transform: translateY(-2px);
+    }
+
+    .dhikr-btn.active {
+        background: var(--gold);
+        color: #020617;
+        box-shadow: 0 0 25px var(--gold-glow);
+    }
+
+    /* ── MOBILE FIRST BASE ── (apply to small screens by default) */
+@media (max-width: 1023px) {  /* most tablets + phones */
+    body {
+        flex-direction: column;   /* stack sidebar on top of main */
+    }
+
+    nav {
+        width: 100%;
+        height: auto;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+        padding: 20px 15px;
+        transform: none;           /* no slide animation needed */
+        opacity: 1;
+        position: relative;        /* not fixed */
+        box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+        overflow-x: hidden;
+    }
+
+    nav .nav-label {
+        margin: 20px 0 10px;
+    }
+
+    nav .nav-btn {
+        padding: 14px 16px;
+        font-size: 0.95rem;
+        justify-content: center;
+    }
+
+    main {
+        padding: 25px 15px 80px;   /* extra bottom space for fingers */
+    }
+
+    .hero-row {
+        grid-template-columns: 1fr;   /* stack cards vertically */
+        gap: 20px;
+    }
+
+    .card {
+        padding: 25px 20px;
+    }
+
+    .ayah-text {
+        font-size: 2.4rem;   /* smaller arabic on mobile */
+    }
+
+    /* Tasbih – smaller ring */
+    .tasbih-core, #tasbih-ring {
+        width: 260px;
+        height: 260px;
+    }
+
+    #t-num {
+        font-size: 5.5rem;
+    }
+
+    /* Calendar grid – more columns on tablets, fewer on phones */
+    .cal-grid {
+        grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+    }
+
+    /* Prayer tracker */
+    .prayer-grid {
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    }
+}
+
+/* ── Very small phones (≤ 480px) ── */
+@media (max-width: 480px) {
+    .welcome-arch {
+        width: 90%;
+        height: auto;
+        padding: 40px 20px;
+        border-radius: 40px 40px 30px 30px;
+    }
+
+    .welcome-arch h1 {
+        font-size: 3.2rem;
+    }
+
+    .urdu-master {
+        font-size: 5.5rem;
+    }
+
+    .majestic-moon {
+        font-size: 6rem;
+    }
+
+    main {
+        padding: 20px 12px 100px;
+    }
+
+    .btn-action {
+        padding: 14px 28px;
+        font-size: 1rem;
+    }
+
+    /* Make tap targets bigger */
+    .track-item, .dhikr-btn, .btn-action {
+        min-height: 48px;   /* Apple HIG & Android recommendation */
+        min-width: 48px;
+    }
+}
+
+/* ── MOBILE MENU TOGGLE ── */
+.mobile-menu-btn {
+    display: none;                    /* hidden on desktop */
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    z-index: 1000;
+    background: var(--gold);
+    color: #020617;
+    border: none;
+    padding: 12px 20px;
+    font-size: 1.5rem;
+    font-weight: bold;
+    border-radius: 12px;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+}
+
+@media (max-width: 1023px) {
+    .mobile-menu-btn {
+        display: block;
+    }
+
+    nav#sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.45s ease-in-out;
+        background: var(--sidebar);
+        backdrop-filter: blur(50px);
+        border-bottom: 1px solid var(--border);
+        padding: 70px 15px 20px;   /* space for the button */
+        box-shadow: 0 8px 25px rgba(0,0,0,0.6);
+        z-index: 999;
+    }
+
+    nav#sidebar.open {
+        max-height: 1000px;           /* large enough for your menu items */
+    }
+
+    /* make nav items stack nicely */
+    nav .nav-label,
+    nav .nav-btn {
+        width: 100%;
+        text-align: center;
+        margin: 8px 0;
+    }
+}
+
+/* Optional: dim background when menu is open */
+body.menu-open {
+    overflow: hidden;
+}
+
+/* ── Landscape phones & small tablets ── */
+@media (max-width: 896px) and (orientation: landscape) {
+    nav {
+        padding: 15px;
+    }
+    main {
+        padding: 20px;
+    }
+}
+
+/* ── Hide / collapse heavy animations on mobile to save battery ── */
+@media (max-width: 1023px) {
+    .lantern-container {
+        display: none;   /* lanterns look weird on small screens */
+    }
+
+    .cinematic-fog, .majestic-moon {
+        animation: none;   /* reduce motion */
+    }
+}
+</style>
+</head>
+<body>
+<canvas id="bg-canvas"></canvas>
+<div class="eternal-bg"></div>
+
+<!-- WELCOME PAGE - FULLY REDESIGNED -->
+<div id="welcome-page">
+    <div class="welcome-arch" onclick="startCinematic()">
+        <div class="bismillah">بِسْمِ اللهِ الرَّحْمنِ الرَّحِيمِ</div>
+        <p style="font-size:1.15rem; letter-spacing:4px; opacity:0.85; margin-bottom:8px;">Welcome to</p>
+        <h1>Kinza's Space</h1>
+        <p class="subtitle">Ramadan Legacy OS 1447</p>
+        <div class="welcome-pulse">CLICK TO ENTER THE BLESSINGS</div>
+    </div>
+</div>
+
+<!-- CINEMATIC OVERLAY - COMPLETELY REDESIGNED & MAJESTIC -->
+<div id="cinematic-overlay">
+    <div class="cinematic-fog"></div>
+    <div class="cinematic-corner top-left-c"></div>
+    <div class="cinematic-corner bottom-right-c"></div>
+    
+    <div class="majestic-moon">🌙</div>
+    
+    <div class="urdu-master">
+        <span class="urdu-word" id="w1">رَمَضَان</span>
+        <span class="urdu-word" id="w2">مُبَارَك</span>
+    </div>
+    
+    <div class="english-blessing" id="english-bless">Ramadan Kareem • May Allah accept your fasts</div>
+    
+    <div class="continue-hint" onclick="enterDashboard()">
+        <p>PROCEED TO DASHBOARD</p>
+        <span style="font-size: 2.4rem; display:block; margin-top:6px;">↓</span>
+    </div>
+</div>
+
+<button class="mobile-menu-btn" id="menu-toggle">☰ Menu</button>
+<nav id="sidebar">
+    <div class="logo-section">
+        <div class="logo-arabic">رَمَضَان</div>
+        <div style="font-size: 0.72rem; letter-spacing: 4px; opacity: 0.55;">LEGACY 1447</div>
+    </div>
+    <div class="nav-label">Core OS</div>
+    <button class="nav-btn active" onclick="showView('home', this)"><span>🕌</span> Dashboard</button>
+    <button class="nav-btn" onclick="showView('calendar', this)"><span>📅</span> 30-Day Calendar</button>
+    <button class="nav-btn" onclick="showView('tracker', this)"><span>✨</span> Prayer Tracker</button>
+    <button class="nav-btn" onclick="showView('quran', this)"><span>📜</span> Quran Progress</button>
+    
+    <div class="nav-label">Soul & Heart</div>
+    <button class="nav-btn" onclick="showView('journal', this)"><span>📝</span> Gratitude Journal</button>
+    <button class="nav-btn" onclick="showView('tasbih', this)"><span>📿</span> Digital Tasbih</button>
+    <button class="nav-btn" onclick="showView('ashra', this)"><span>🕯️</span> Three Ashras</button>
+    
+    <div class="nav-label">Life & Prep</div>
+    <button class="nav-btn" onclick="showView('meals', this)"><span>🍲</span> Meal Planner</button>
+    <button class="nav-btn" onclick="showView('community', this)"><span>🤝</span> Community Hub</button>
+    <button class="nav-btn" onclick="showView('duas', this)"><span>🤲</span> Sehri & Iftar Duas</button>
+    
+    <!-- ADDED FOR BEAUTY (nothing removed) -->
+    <div class="nav-label">Blessed Nights</div>
+    <button class="nav-btn" onclick="showView('qadr', this)"><span>🌕</span> Laylatul Qadr Prep</button>
+
+    <button id="menu-toggle" class="mobile-menu-btn">☰ Menu</button>
+</nav>
+
+<main id="main-content">
+    <section id="view-home" class="view active">
+        <div class="hero-row">
+            <div class="card">
+                <span style="color:var(--teal); font-weight:800; font-size:0.75rem; letter-spacing: 2px;">DAILY REFLECTION</span>
+                <div class="ayah-text">فَاذْكُرُونِي أَذْكُرْكُمْ</div>
+                <div style="text-align:right; font-style:italic; opacity:0.8; font-size: 1.1rem;">"Remember Me; I will remember you."</div>
+            </div>
+            <div class="card" style="text-align:center; display: flex; flex-direction: column; justify-content: center;">
+                <p style="opacity:0.5; font-size:0.8rem; letter-spacing: 2px;">RAMADAN DAY</p>
+                <div style="font-size:6.8rem; font-weight:800; color:var(--gold); line-height:1;">13</div>
+                <p style="color:var(--ashra2); font-weight:700; margin-top: 10px;">ASHRA OF FORGIVENESS</p>
+                <p style="font-size:0.85rem; opacity:0.65;">March 04, 2026</p>
+            </div>
+        </div>
+        <div class="card">
+            <h3 style="color: var(--teal);">Sunnah Spotlight</h3>
+            
+            <div style="margin-top: 20px; font-family: 'Amiri', serif; font-size: 1.45rem; color: var(--gold-light); text-align: right; line-height: 1.6; direction: rtl;">
+                قَالَ رَسُولُ اللَّهِ صَلَّى اللَّهُ عَلَيْهِ وَسَلَّمَ: 
+                <span style="font-weight: 700; color: var(--gold);">«تَسَحَّرُوا فَإِنَّ فِي السَّحُورِ بَرَكَةً»</span>
+            </div>
+            
+            <p style="margin-top: 12px; font-style: italic; opacity: 0.85; font-size: 1.05rem; color: #e0f2fe;">
+                Prophet Muhammad (ﷺ) said: 
+                <strong>"Take Suhoor, for in Suhoor there is blessing."</strong>
+            </p>
+            
+            <p style="margin-top: 18px; line-height: 1.7; opacity: 0.8; font-size: 1.1rem;">
+                استعمال کریں یہ وقت صرف کھانے کے لیے نہیں بلکہ تہجد اور استغفار کے لیے بھی۔  
+               <br> Use this time not just for food, but for Tahajjud and Istighfar.
+            </p>
+        </div>
+    </section>
+
+    <section id="view-calendar" class="view">
+        <h2 style="margin-bottom:30px; font-size: 2rem; color: var(--gold);">30-Day Interactive Roadmap</h2>
+        <div class="cal-grid" id="cal-container"></div>
+    </section>
+
+    <section id="view-tracker" class="view">
+    <div class="card">
+        <h2 style="color: var(--gold); margin-bottom: 35px;">Spiritual Productivity Tracker</h2>
+
+        <!-- Prayers Grid -->
+        <div class="prayer-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 18px; margin-bottom: 45px;">
+            <div class="track-item" data-type="prayer" onclick="toggleTrack(this)">
+                <div class="track-bar"><div class="track-fill"></div></div>
+                <span>Fajr</span>
+            </div>
+            <div class="track-item" data-type="prayer" onclick="toggleTrack(this)">
+                <div class="track-bar"><div class="track-fill"></div></div>
+                <span>Dhuhr</span>
+            </div>
+            <div class="track-item" data-type="prayer" onclick="toggleTrack(this)">
+                <div class="track-bar"><div class="track-fill"></div></div>
+                <span>Asr</span>
+            </div>
+            <div class="track-item" data-type="prayer" onclick="toggleTrack(this)">
+                <div class="track-bar"><div class="track-fill"></div></div>
+                <span>Maghrib</span>
+            </div>
+            <div class="track-item" data-type="prayer" onclick="toggleTrack(this)">
+                <div class="track-bar"><div class="track-fill"></div></div>
+                <span>Isha</span>
+            </div>
+            <div class="track-item special-item" data-type="taraweeh" onclick="toggleTrack(this)">
+                <div class="track-bar"><div class="track-fill"></div></div>
+                <span>Taraweeh</span>
+                <small style="opacity:0.6; font-size:0.78rem; display:block; margin-top:6px;">(completed rak'ahs tonight)</small>
+            </div>
+        </div>
+
+        <!-- Extra Goals Row -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin: 40px 0;">
+            <!-- Sadaqah Tracker -->
+            <div class="card" style="padding: 25px; background: rgba(245,158,11,0.08); border: 1px solid var(--border);">
+                <h3 style="color: var(--gold-light); margin-bottom: 18px;">Sadaqah Today</h3>
+                <div class="sadaqah-inputs" style="display: flex; flex-direction: column; gap: 14px;">
+                    <input type="number" id="sadaqah-amount" placeholder="Amount given (PKR)" min="0" style="padding: 14px;">
+                    <textarea id="sadaqah-note" rows="3" placeholder="For whom / where (mosque, family, poor...)" style="resize: none;"></textarea>
+                    <button class="btn-action" style="font-size:0.95rem; padding:12px 24px;" onclick="saveSadaqah()">Record Sadaqah</button>
+                </div>
+                <div id="sadaqah-log" style="margin-top:20px; font-size:0.9rem; opacity:0.85;"></div>
+            </div>
+
+            <!-- Dua List (Expandable + Add) -->
+            <div class="card" style="padding: 25px; background: rgba(45,212,191,0.08); border: 1px solid var(--border);">
+                <h3 style="color: var(--teal); margin-bottom: 18px;">My Dua List</h3>
+                <div style="display: flex; gap: 12px; margin-bottom: 18px;">
+                    <input type="text" id="new-dua" placeholder="Add a new dua / name / need..." style="flex:1;">
+                    <button class="btn-action" style="padding:12px 24px; font-size:0.95rem;" onclick="addDua()">Add</button>
+                </div>
+                <div id="dua-list-container" style="max-height: 320px; overflow-y: auto; padding-right: 8px;"></div>
+            </div>
+        </div>
+
+        <!-- Quick Stats (optional nice touch) -->
+        <div style="text-align:center; margin-top:30px; opacity:0.8; font-size:0.95rem;">
+            <span id="prayer-count">0/5 prayers completed today</span> • 
+            <span id="extra-count">0 extra goals</span>
+        </div>
+    </div>
+</section>
+
+    <section id="view-quran" class="view">
+    <div class="card" style="max-width: 800px; margin: 0 auto; text-align: center;">
+        <h2 style="color: var(--gold); margin-bottom: 30px;">Quran Recitation Progress</h2>
+
+        <!-- Circular Progress Ring -->
+        <div style="position: relative; width: 220px; height: 220px; margin: 0 auto 35px;">
+            <div id="quran-ring" style="
+                width: 100%; height: 100%; border-radius: 50%;
+                background: conic-gradient(var(--gold) 0% var(--progress, 0%), rgba(245,158,11,0.15) var(--progress, 0%) 100%);
+                display: flex; align-items: center; justify-content: center;
+                box-shadow: inset 0 0 30px rgba(0,0,0,0.6), 0 0 40px var(--gold-glow);
+                transition: all 0.6s ease;
+            ">
+                <div style="
+                    width: 180px; height: 180px; background: #020617;
+                    border-radius: 50%; display: flex; flex-direction: column;
+                    align-items: center; justify-content: center;
+                    box-shadow: inset 0 0 25px rgba(0,0,0,0.8);
+                ">
+                    <div id="progress-percent" style="font-size: 3.2rem; font-weight: 700; color: var(--gold);">0%</div>
+                    <div style="font-size: 0.95rem; opacity: 0.7; margin-top: 6px;">Completed</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Motivational message -->
+        <p id="motivation" style="font-size: 1.1rem; color: var(--teal); margin: 0 0 30px; min-height: 1.4em; opacity: 0.9;">
+            Start your journey — every letter counts in Ramadan 🌙
+        </p>
+
+        <!-- Inputs -->
+        <div class="hero-row" style="gap: 25px; margin-top: 30px;">
+            <div style="flex: 1;">
+                <label style="color: var(--teal); font-weight: 600; display: block; margin-top: 8px;">Juz Completed Up To</label>
+                <select id="juz-select" style="
+                    width: 100%; padding: 16px; border-radius: 16px; background: rgba(0, 0, 0, 0.671);
+                    border: 1px solid var(--border); color: rgb(243, 140, 5); font-size: 1rem;">
+                    <option value="0">Select Juz...</option>
+                    <option value="1">Juz 1 – Alif Lam Meem (Al-Fatiha → Al-Baqarah 141)</option>
+                    <option value="2">Juz 2 – Sayaqool (Al-Baqarah 142 → 252)</option>
+                    <option value="3">Juz 3 – Tilkal Rusul (Al-Baqarah 253 → Al-Imran 92)</option>
+                    <option value="4">Juz 4 – Lan Tanaloo (Al-Imran 93 → An-Nisa 23)</option>
+                    <option value="5">Juz 5 – Wal Muhsanat (An-Nisa 24 → 147)</option>
+                    <option value="6">Juz 6 – La Yuhibbullah (An-Nisa 148 → Al-Ma'idah 81)</option>
+                    <option value="7">Juz 7 – Wa Iza Sami'u (Al-Ma'idah 82 → Al-An'am 110)</option>
+                    <option value="8">Juz 8 – Wa 'Alam (Al-An'am 111 → Al-A'raf 87)</option>
+                    <option value="9">Juz 9 – Qalal-Mala (Al-A'raf 88 → Al-Anfal 40)</option>
+                    <option value="10">Juz 10 – Wa 'Alamu (Al-Anfal 41 → At-Tawbah 92)</option>
+                    <option value="11">Juz 11 – Yatazeroon (At-Tawbah 93 → Hud 5)</option>
+                    <option value="12">Juz 12 – Wa Mamin Da'abbah (Hud 6 → Yusuf 52)</option>
+                    <option value="13">Juz 13 – Wa Ma Ubri'u (Yusuf 53 → Ibrahim 52)</option>
+                    <option value="14">Juz 14 – Rubama (Al-Hijr 1 → An-Nahl 128)</option>
+                    <option value="15">Juz 15 – Subhanalladhi (Al-Isra 1 → Al-Kahf 74)</option>
+                    <option value="16">Juz 16 – Qala Alam (Al-Kahf 75 → Ta-Ha 135)</option>
+                    <option value="17">Juz 17 – Iqtaraba (Al-Anbiya 1 → Al-Hajj 78)</option>
+                    <option value="18">Juz 18 – Qad Aflaha (Al-Mu'minun 1 → Al-Furqan 20)</option>
+                    <option value="19">Juz 19 – Wa Qala alladhina (Al-Furqan 21 → An-Naml 55)</option>
+                    <option value="20">Juz 20 – Amman Khalaq (An-Naml 56 → Al-Ankabut 45)</option>
+                    <option value="21">Juz 21 – Utlu ma oohiya (Al-Ankabut 46 → Ar-Rum 30)</option>
+                    <option value="22">Juz 22 – Wa man yaqnut (Ar-Rum 31 → Al-Ahzab 30)</option>
+                    <option value="23">Juz 23 – Wa maliya (Al-Ahzab 31 → Ya-Sin 27)</option>
+                    <option value="24">Juz 24 – Faman azlam (Ya-Sin 28 → Az-Zumar 31)</option>
+                    <option value="25">Juz 25 – Ilayhi yuraddu (Az-Zumar 32 → Fussilat 46)</option>
+                    <option value="26">Juz 26 – Ha Mim (Fussilat 47 → Al-Ahqaf 35)</option>
+                    <option value="27">Juz 27 – Qala faman (Muhammad 1 → Adh-Dhariyat 30)</option>
+                    <option value="28">Juz 28 – Qadd sami'a (Adh-Dhariyat 31 → Al-Hadid 29)</option>
+                    <option value="29">Juz 29 – Tabarakalladhi (Al-Mulk 1 → Al-Mursalat 50)</option>
+                    <option value="30">Juz 30 – 'Amma (An-Naba 1 → An-Nas 6)</option>
+                </select>
+            </div>
+
+            <div style="flex: 1;">
+                <label style="color: var(--gold-light); font-weight: 600; display: block; margin-bottom: 8px;">Last Ayah / Surah Read</label>
+                <input type="text" id="last-read" placeholder="e.g. Al-Baqarah 141 or Surah Yasin ayah 10" style="
+                    width: 100%; padding: 16px; border-radius: 16px; background: rgba(0,0,0,0.5);
+                    border: 1px solid var(--border); color: white; font-size: 1rem;
+                ">
+            </div>
+        </div>
+
+        <div style="margin: 25px 0;">
+            <textarea id="quran-notes" rows="3" placeholder="Any notes, dua for khatm, or challenges faced today..." style="
+                width: 100%; padding: 16px; border-radius: 16px; background: rgba(0,0,0,0.5);
+                border: 1px solid var(--border); color: white; resize: vertical;
+            "></textarea>
+        </div>
+
+        <button class="btn-action" style="padding: 16px 48px; font-size: 1.1rem;" onclick="updateQuranProgress()">Update & Save Progress</button>
+    </div>
+</section>
+
+    <section id="view-journal" class="view">
+    <div class="hero-row" style="gap: 35px;">
+        
+        <!-- Daily Gratitude -->
+        <div class="card" style="flex: 1; max-width: 520px;">
+            <h3 style="color: var(--teal); margin-bottom: 25px; text-align: center;">Daily Gratitude</h3>
+            
+            <div style="margin-bottom: 15px; display: flex; justify-content: center; gap: 12px; flex-wrap: wrap;">
+                <button class="emoji-btn" onclick="insertEmoji('❤️')">❤️</button>
+                <button class="emoji-btn" onclick="insertEmoji('🤲')">🤲</button>
+                <button class="emoji-btn" onclick="insertEmoji('🌙')">🌙</button>
+                <button class="emoji-btn" onclick="insertEmoji('☀️')">☀️</button>
+                <button class="emoji-btn" onclick="insertEmoji('🙏')">🙏</button>
+                <button class="emoji-btn" onclick="insertEmoji('✨')">✨</button>
+            </div>
+            
+            <textarea id="gratitude-text" rows="7" placeholder="One small blessing I am thankful for today... Alhamdulillah for..." style="width:100%; resize: vertical;"></textarea>
+            <div style="text-align: right; font-size: 0.85rem; opacity: 0.7; margin-top: 6px;">
+                <span id="char-count">0</span>/300
+            </div>
+            
+            <button class="btn-action" style="width: 100%; margin-top: 20px; font-size: 1.05rem;" onclick="saveGratitude()">Save Today's Gratitude</button>
+            
+            <div id="gratitude-saved" style="margin-top: 25px; padding: 15px; background: rgba(45,212,191,0.1); border-radius: 16px; border: 1px solid var(--teal); display: none;">
+                <strong style="color: var(--teal);">Saved Today:</strong>
+                <p id="today-gratitude-display" style="margin: 12px 0; line-height: 1.6;"></p>
+            </div>
+            
+            <div id="gratitude-history" style="margin-top: 30px; max-height: 220px; overflow-y: auto;"></div>
+        </div>
+
+        <!-- Personal Dua List -->
+        <div class="card" style="flex: 1; max-width: 520px;">
+            <h3 style="color: var(--gold); margin-bottom: 25px; text-align: center;">Personal Dua List</h3>
+            
+            <div style="display: flex; gap: 12px; margin-bottom: 20px;">
+                <input type="text" id="new-dua-input" placeholder="Add someone or a need (e.g. 'My mother’s health' or 'Success in exams')" style="flex: 1; padding: 14px; border-radius: 14px;">
+                <select id="dua-priority" style="padding: 14px; border-radius: 14px; background: rgba(0,0,0,0.5); border: 1px solid var(--border); color: white;">
+                    <option value="normal">Normal</option>
+                    <option value="high">High Priority</option>
+                </select>
+                <button class="btn-action" style="padding: 0 24px;" onclick="addDuaEntry()">Add</button>
+            </div>
+            
+            <div id="dua-list-container" style="min-height: 180px; max-height: 380px; overflow-y: auto; padding-right: 6px;"></div>
+            
+            <p style="text-align: center; opacity: 0.6; font-size: 0.9rem; margin-top: 15px;">
+                These names & duas will be in your sujood inshaAllah 🤲
+            </p>
+        </div>
+    </div>
+</section>
+
+    <section id="view-tasbih" class="view" style="text-align:center;">
+    <div class="card" style="max-width: 720px; margin: 0 auto; padding: 40px 30px;">
+        <h2 style="color: var(--gold); margin-bottom: 25px;">Digital Tasbih Counter</h2>
+
+        <!-- Dhikr Selection -->
+        <div style="display: flex; justify-content: center; gap: 18px; margin-bottom: 35px; flex-wrap: wrap;">
+            <button class="dhikr-btn active" data-dhikr="subhanallah" data-target="33" onclick="selectDhikr(this)">
+                SubhanAllah
+            </button>
+            <button class="dhikr-btn" data-dhikr="alhamdulillah" data-target="33" onclick="selectDhikr(this)">
+                Alhamdulillah
+            </button>
+            <button class="dhikr-btn" data-dhikr="allahuakbar" data-target="34" onclick="selectDhikr(this)">
+                Allahu Akbar
+            </button>
+        </div>
+
+        <!-- Main Counter Ring -->
+        <div style="position: relative; width: 320px; height: 320px; margin: 0 auto 40px;">
+            <div id="tasbih-ring" style="
+                width: 100%; height: 100%; border-radius: 50%;
+                background: conic-gradient(var(--current-color, var(--gold)) 0% var(--progress, 0%), rgba(245,158,11,0.12) var(--progress, 0%) 100%);
+                display: flex; align-items: center; justify-content: center;
+                box-shadow: 0 0 60px var(--gold-glow), inset 0 0 35px rgba(0,0,0,0.7);
+                transition: all 0.4s ease;
+            ">
+                <div style="
+                    width: 260px; height: 260px; background: #020617;
+                    border-radius: 50%; display: flex; flex-direction: column;
+                    align-items: center; justify-content: center;
+                    box-shadow: inset 0 0 40px rgba(0,0,0,0.9);
+                ">
+                    <div id="t-num" style="font-size: 6.8rem; font-weight: 200; color: var(--gold);">0</div>
+                    <div id="t-target" style="font-size: 1.1rem; opacity: 0.7; margin-top: 8px;">/ 33</div>
+                    <div id="current-dhikr" style="font-size: 1.35rem; color: var(--gold-light); margin-top: 12px; font-family: 'Amiri', serif;">
+                        Subḥānallāh
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Controls -->
+        <div style="display: flex; justify-content: center; gap: 25px; margin: 30px 0;">
+            <button class="btn-action" style="width: 160px; height: 160px; border-radius: 50%; font-size: 1.8rem; border: 5px solid var(--gold-glow); box-shadow: 0 10px 30px var(--gold-glow);" onclick="tapTasbih()">
+                TAP
+            </button>
+        </div>
+
+        <div style="display: flex; justify-content: center; gap: 30px; margin: 25px 0;">
+            <button class="btn-action" style="padding: 14px 32px; background: rgba(239,68,68,0.7);" onclick="resetTasbih()">Reset Counter</button>
+            <button class="btn-action" style="padding: 14px 32px;" onclick="clearTodayTasbih()">Clear Today</button>
+        </div>
+
+        <!-- Status / Motivation -->
+        <p id="tasbih-status" style="font-size: 1.15rem; color: var(--teal); margin-top: 25px; min-height: 1.5em;">
+            Begin dhikr — glorify Allah in this blessed month 🌙
+        </p>
+    </div>
+</section>
+
+    <section id="view-ashra" class="view">
+    <h2 style="text-align:center; color:var(--gold); margin: 0 0 40px; font-size:2.2rem;">The Three Ashras of Ramadan</h2>
+    
+    <div style="display: grid; gap: 30px; max-width: 1100px; margin: 0 auto;">
+        <div class="card" style="border-left: 14px solid var(--ashra1); background: linear-gradient(135deg, rgba(16,185,129,0.08), transparent 70%);">
+            <h2 style="color:var(--ashra1); margin-bottom: 15px;">First Ashra • Days 1–10</h2>
+            <h3 style="color:#a7f3d0; font-size:1.3rem; margin-bottom:12px;">The Ashra of Mercy (رحمة)</h3>
+            <div class="ayah-text" style="font-size:2.1rem; margin:20px 0;">رَبِّ اغْفِرْ وَارْحَمْ وَأَنْتَ خَيْرُ الرَّاحِمِينَ</div>
+            <p style="opacity:0.85; line-height:1.6;">Ask Allah for His vast mercy. This is the time to seek forgiveness and open your heart to compassion — for yourself and others.</p>
+        </div>
+
+        <div class="card" style="border-left: 14px solid var(--ashra2); background: linear-gradient(135deg, rgba(59,130,246,0.08), transparent 70%);">
+            <h2 style="color:var(--ashra2); margin-bottom: 15px;">Second Ashra • Days 11–20</h2>
+            <h3 style="color:#93c5fd; font-size:1.3rem; margin-bottom:12px;">The Ashra of Forgiveness (مغفرة)</h3>
+            <div class="ayah-text" style="font-size:2.1rem; margin:20px 0;">أَسْتَغْفِرُ اللَّهَ رَبِّي مِنْ كُلِّ ذَنْبٍ وَأَتُوبُ إِلَيْهِ</div>
+            <p style="opacity:0.85; line-height:1.6;">Increase in istighfar. Allah loves those who constantly repent. Cleanse your record before the final stretch begins.</p>
+        </div>
+
+        <div class="card" style="border-left: 14px solid var(--ashra3); background: linear-gradient(135deg, rgba(239,68,68,0.08), transparent 70%);">
+            <h2 style="color:var(--ashra3); margin-bottom: 15px;">Third Ashra • Days 21–30</h2>
+            <h3 style="color:#fca5a5; font-size:1.3rem; margin-bottom:12px;">The Ashra of Salvation / Protection from Fire (عتق من النار)</h3>
+            <div class="ayah-text" style="font-size:2.1rem; margin:20px 0;">اللَّهُمَّ أَجِرْنِي مِنَ النَّارِ</div>
+            <p style="opacity:0.85; line-height:1.6;">Intensify dua for protection from Hellfire and for Jannah. Especially focus on Laylatul Qadr — it may fall in these nights.</p>
+        </div>
+    </div>
+</section>
+
+<section id="view-meals" class="view">
+    <div class="card" style="max-width: 900px; margin: 0 auto;">
+        <h2 style="color: var(--gold); text-align: center; margin-bottom: 35px;">Suhoor & Iftar Planner</h2>
+
+        <div class="hero-row" style="gap: 40px;">
+            <!-- Suhoor -->
+            <div style="flex: 1;">
+                <label style="color: var(--teal); font-weight: 700; font-size: 1.3rem; display: block; margin-bottom: 15px;">🌅 Suhoor Plan</label>
+                <div id="suhoor-items" style="min-height: 120px; margin-bottom: 15px;"></div>
+                <div style="display: flex; gap: 10px;">
+                    <input type="text" id="suhoor-new" placeholder="e.g. Dates + Yogurt + Eggs" style="flex:1;">
+                    <button class="btn-action" style="padding:12px 24px;" onclick="addMealItem('suhoor')">Add</button>
+                </div>
+            </div>
+
+            <!-- Iftar -->
+            <div style="flex: 1;">
+                <label style="color: var(--gold); font-weight: 700; font-size: 1.3rem; display: block; margin-bottom: 15px;">🌇 Iftar Plan</label>
+                <div id="iftar-items" style="min-height: 120px; margin-bottom: 15px;"></div>
+                <div style="display: flex; gap: 10px;">
+                    <input type="text" id="iftar-new" placeholder="e.g. Dates, Soup, Chicken Biryani" style="flex:1;">
+                    <button class="btn-action" style="padding:12px 24px;" onclick="addMealItem('iftar')">Add</button>
+                </div>
+            </div>
+        </div>
+
+        <button class="btn-action" style="width: 100%; margin-top: 35px; font-size: 1.1rem;" onclick="saveMealPlan()">Save Today's Menu</button>
+
+        <p id="meal-status" style="text-align:center; margin-top:20px; color:var(--teal); font-size:1rem; opacity:0.9;"></p>
+    </div>
+</section>
+
+<section id="view-community" class="view">
+    <div class="card">
+        <h2 style="color: var(--gold); text-align:center; margin-bottom: 35px;">Community Hub</h2>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px;">
+            <div class="card" style="background: rgba(245,158,11,0.06);">
+                <h4 style="color:var(--gold); margin-bottom: 15px;">Volunteer & Good Deeds</h4>
+                <p style="line-height:1.6; opacity:0.9;">Join the mosque cleaning drive this Saturday after Fajr.  
+                Bring gloves & positive energy — reward multiplied in Ramadan!</p>
+                <button class="btn-action" style="margin-top:18px; width:100%;">I'm Interested</button>
+            </div>
+
+            <div class="card" style="background: rgba(45,212,191,0.06);">
+                <h4 style="color:var(--teal); margin-bottom: 15px;">Recipe Exchange</h4>
+                <p style="line-height:1.6; opacity:0.9;">Try this quick iftar idea: Stuffed Dates with walnuts, almonds & a touch of honey.  
+                Simple, nutritious & sunnah-approved!</p>
+                <button class="btn-action" style="margin-top:18px; width:100%;">Share Your Recipe</button>
+            </div>
+
+            <div class="card" style="grid-column: 1 / -1; background: rgba(255,255,255,0.04);">
+                <h4 style="color:var(--gold-light); text-align:center; margin-bottom: 15px;">Daily Community Reminder</h4>
+                <p style="text-align:center; font-size:1.1rem; opacity:0.9; line-height:1.6;">
+                    "The best among you are those who learn the Qur'an and teach it." (Bukhari)<br>
+                    Share a short ayah or hadith in your family group today.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="view-duas" class="view">
+    <div class="card" style="max-width: 900px; margin: 0 auto;">
+        <h2 style="color: var(--gold); text-align: center; margin-bottom: 40px;">Sehri & Iftar Duas</h2>
+
+        <div class="hero-row" style="gap: 40px;">
+            <div class="card" style="flex:1; border-left: 8px solid var(--gold);">
+                <h3 style="color:var(--gold);">Suhoor / Sehri Intention (Niyyah)</h3>
+                <div class="ayah-text" style="font-size: 2.4rem; margin: 25px 0;">وَبِصَوْمِ غَدٍ نَّوَيْتُ مِنْ شَهْرِ رَمَضَانَ</div>
+                <p style="font-style:italic; opacity:0.85; margin-top:15px;">
+                    "I intend to fast tomorrow from the month of Ramadan."<br>
+                    <small>(Say before Fajr ends – silently in heart is also valid)</small>
+                </p>
+            </div>
+
+            <div class="card" style="flex:1; border-left: 8px solid var(--teal);">
+                <h3 style="color:var(--teal);">Iftar Dua (at breaking fast)</h3>
+                <div class="ayah-text" style="font-size: 2.4rem; margin: 25px 0;">اللَّهُمَّ إِنِّي لَكَ صُمْتُ وَعَلَىٰ رِزْقِكَ أَفْطَرْتُ</div>
+                <p style="font-style:italic; opacity:0.85; margin-top:15px;">
+                    "O Allah! For You I have fasted and with Your provision I break my fast."<br>
+                    <small>(Say right after adhan or when breaking fast – beautiful moment of acceptance)</small>
+                </p>
+            </div>
+        </div>
+
+        <p style="text-align:center; margin-top:40px; opacity:0.8; font-size:1.05rem;">
+            These short duas connect your fast directly to Allah's pleasure. Repeat with presence.
+        </p>
+    </div>
+</section>
+
+<section id="view-qadr" class="view">
+    <div class="card" style="max-width: 880px; margin: 0 auto; text-align: center;">
+        <h2 style="color: var(--gold); margin-bottom: 30px;">🌕 Laylatul Qadr Preparation</h2>
+
+        <div class="ayah-text" style="font-size: 2.6rem; margin: 30px 0;">لَيْلَةُ الْقَدْرِ خَيْرٌ مِّنْ أَلْفِ شَهْرٍ</div>
+        <p style="font-size: 1.2rem; opacity: 0.9; line-height: 1.7; margin-bottom: 35px;">
+            The Night of Decree is better than a thousand months.<br>
+            Search for it in the odd nights of the last ten days (21, 23, 25, 27, 29).
+        </p>
+
+        <div style="background: rgba(245,158,11,0.08); border: 1px solid var(--border); border-radius: 20px; padding: 30px; margin: 30px 0;">
+            <h3 style="color: var(--gold-light); margin-bottom: 20px;">Tonight's Checklist</h3>
+            <ul style="list-style: none; text-align: left; max-width: 500px; margin: 0 auto; font-size: 1.05rem; line-height: 2;">
+                <li>✓ Recite Quran with reflection</li>
+                <li>✓ Make long & sincere dua</li>
+                <li>✓ Pray Tahajjud & Qiyam</li>
+                <li>✓ Give extra sadaqah</li>
+                <li>✓ Say: اللَّهُمَّ إِنَّكَ عَفُوٌّ تُحِبُّ الْعَفْوَ فَاعْفُ عَنِّي repeatedly</li>
+            </ul>
+        </div>
+
+        <button class="btn-action" style="padding: 16px 50px; font-size: 1.15rem;">Set Night Vigil Reminder</button>
+
+        <p style="margin-top: 30px; opacity: 0.8; font-size: 1rem;">
+            May Allah grant us Laylatul Qadr this year. Ameen.
+        </p>
+    </div>
+</section>
+</main>
+
+<div id="guidance-modal" onclick="closeGuidance()">
+    <div class="card" style="max-width:720px; width:92%; border:3px solid var(--gold);" onclick="event.stopPropagation()">
+        <h2 id="m-day-title" style="color:var(--gold);">Day X</h2>
+        <p id="m-type" style="color:var(--teal); font-weight:800; font-size:0.72rem; letter-spacing:2px;"></p>
+        <div id="m-arabic" class="ayah-text" style="font-size:2.35rem;"></div>
+        <p id="m-english" style="font-style:italic; border-left:5px solid var(--gold); padding-left:25px; font-size:1.1rem;"></p>
+        <button class="btn-action" style="width:100%; margin-top:30px;" onclick="closeGuidance()">Close Reflection</button>
+    </div>
+</div>
+
+<script>
+    // Background particles (unchanged)
+    const canvas = document.getElementById('bg-canvas');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+    function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+    window.addEventListener('resize', resize); resize();
+
+    class Particle {
+        constructor() { this.reset(); }
+        reset() {
+            this.x = Math.random() * canvas.width;
+            this.y = Math.random() * canvas.height;
+            this.size = Math.random() * 2.2;
+            this.speed = Math.random() * 0.6;
+            this.opacity = Math.random() * 0.7 + 0.3;
+        }
+        update() { this.y += this.speed; if (this.y > canvas.height) this.y = 0; }
+        draw() {
+            ctx.fillStyle = `rgba(245, 158, 11, ${this.opacity})`;
+            ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill();
+        }
+    }
+    function initParticles() { for(let i=0; i<110; i++) particles.push(new Particle()); }
+    function animate() {
+        ctx.clearRect(0,0, canvas.width, canvas.height);
+        particles.forEach(p => { p.update(); p.draw(); });
+        requestAnimationFrame(animate);
+    }
+    initParticles(); animate();
+
+    // Cinematic entry (updated delays for new design)
+    function startCinematic() {
+        document.getElementById('welcome-page').style.opacity = '0';
+        setTimeout(() => {
+            document.getElementById('welcome-page').style.display = 'none';
+            const overlay = document.getElementById('cinematic-overlay');
+            overlay.style.display = 'flex';
+            
+            const delays = [600, 1700, 2900];
+            [1,2,3].forEach((num,i) => {
+                setTimeout(() => {
+                    document.getElementById('w' + num).classList.add('visible');
+                }, delays[i]);
+            });
+            setTimeout(() => {
+                document.getElementById('english-bless').classList.add('visible');
+                document.querySelector('.continue-hint').classList.add('visible');
+            }, 5200);
+        }, 1100);
+    }
+
+    function enterDashboard() {
+        const overlay = document.getElementById('cinematic-overlay');
+        overlay.style.opacity = '0';
+        setTimeout(() => {
+            overlay.style.display = 'none';
+            document.body.classList.add('loaded');
+            for(let i=0; i<90; i++) setTimeout(() => particles.push(new Particle()), i*8);
+        }, 1600);
+    }
+
+    // Data & functions (unchanged except day 13 support)
+    const guidanceData = { 
+        1: { type: "Quran", ar: "شَهْرُ رَمَضَانَ الَّذِي أُنْزِلَ فِيهِ الْقُرْآنُ", en: "The month of Ramadan is that in which was revealed the Quran." }, 
+        2: { type: "Hadith", ar: "الصِّيَامُ جُنَّةٌ", en: "Fasting is a shield (from hellfire and sins)." }, 
+        3: { type: "Quran", ar: "لَعَلَّكُمْ تَتَّقُونَ", en: "...so that you may become mindful of Allah (Taqwa)." }, 
+        4: { type: "Hadith", ar: "مَنْ صَامَ رَمَضَانَ إِيمَانًا وَاحْتِسَابًا غُفِرَ لَهُ مَا تَقَدَّمَ", en: "Whoever fasts Ramadan out of faith and seeking reward, his previous sins are forgiven." }, 
+        5: { type: "Quran", ar: "وَإِذَا سَأَلَكَ عِبَادِي عَنِّي فَإِنِّي قَرِيبٌ", en: "And when My servants ask you concerning Me, indeed I am near." }, 
+        6: { type: "Hadith", ar: "تَسَحَّرُوا فَإِنَّ فِي السُّحُورِ بَرَكَةً", en: "Take Suhoor, for in Suhoor there is blessing." }, 
+        7: { type: "Quran", ar: "فَاذْكُرُونِي أَذْكُرْكُمْ", en: "So remember Me; I will remember you." }, 
+        8: { type: "Hadith", ar: "أَحَبُّ الأَعْمَالِ إِلَى اللَّهِ أَدْوَمُهَا", en: "The most beloved deeds to Allah are those that are most consistent." }, 
+        9: { type: "Quran", ar: "إِنَّ مَعَ الْعُسْرِ يُسْرًا", en: "Indeed, with hardship comes ease." }, 
+        10: { type: "Hadith", ar: "لِلصَّائِمِ فَرْحَتَانِ", en: "The fasting person has two joys: breaking fast and meeting his Lord." }, 
+        11: { type: "Quran", ar: "وَسَارِعُوا إِلَىٰ مَغْفِرَةٍ مِنْ رَبِّكُمْ", en: "And hasten to forgiveness from your Lord." }, 
+        12: { type: "Hadith", ar: "خَيْرُكُمْ مَنْ تَعَلَّمَ الْقُرْآنَ وَعَلَّمَهُ", en: "The best of you are those who learn the Quran and teach it." }, 
+        13: { type: "Quran", ar: "وَتَعَاوَنُوا عَلَى الْبِرِّ وَالتَّقْوَىٰ", en: "And cooperate in righteousness and piety." }, 
+        14: { type: "Hadith", ar: "إِنَّمَا الأَعْمَالُ بِالنِّيَّاتِ", en: "Actions are judged by intentions." }, 
+        15: { type: "Quran", ar: "إِنَّ اللَّهَ مَعَ الصَّابِرِينَ", en: "Indeed, Allah is with the patient." }, 
+        16: { type: "Hadith", ar: "الدُّعَاءُ هُوَ الْعِبَادَةُ", en: "Dua is the essence of worship." }, 
+        17: { type: "Quran", ar: "لَئِنْ شَكَرْتُمْ لَأَزِيدَنَّكُمْ", en: "If you are grateful, I will surely increase you." }, 
+        18: { type: "Hadith", ar: "أَفْضَلُ الصَّدَقَةِ صَدَقَةٌ فِي رَمَضَانَ", en: "The best charity is that given in Ramadan." }, 
+        19: { type: "Quran", ar: "وَقُولُوا لِلنَّاسِ حُسْنًا", en: "And speak to people good words." }, 
+        20: { type: "Hadith", ar: "اتَّقِ اللَّهَ حَيْثُمَا كُنْتَ", en: "Fear Allah wherever you are." }, 
+        21: { type: "Quran", ar: "لَيْلَةُ الْقَدْرِ خَيْرٌ مِنْ أَلْفِ شَهْرٍ", en: "The Night of Decree is better than a thousand months." }, 
+        22: { type: "Hadith", ar: "تَحَرَّوْا لَيْلَةَ الْقَدْرِ فِي الْوِتْرِ", en: "Search for the Night of Qadr in the odd nights of the last ten days." }, 
+        23: { type: "Quran", ar: "رَبَّنَا تَقَبَّلْ مِنَّا", en: "Our Lord, accept [this] from us." }, 
+        24: { type: "Hadith", ar: "اللَّهُمَّ إِنَّكَ عَفُوٌّ تُحِبُّ الْعَفْوَ فَاعْفُ عَنِّي", en: "O Allah, You are Forgiving and love forgiveness, so forgive me." }, 
+        25: { type: "Quran", ar: "فَاسْتَبِقُوا الْخَيْرَاتِ", en: "So race to [all that is] good." }, 
+        26: { type: "Hadith", ar: "الْبِرُّ حُسْنُ الْخُلُقِ", en: "Righteousness is good character." }, 
+        27: { type: "Quran", ar: "وَمَا تَفْعَلُوا مِنْ خَيْرٍ يَعْلَمْهُ اللَّهُ", en: "Whatever good you do, Allah knows it." }, 
+        28: { type: "Hadith", ar: "كُلُّ مَعْرُوفٍ صَدَقَةٌ", en: "Every good deed is a charity." }, 
+        29: { type: "Quran", ar: "إِنَّ اللَّهَ لَا يُضِيعُ أَجْرَ الْمُحْسِنِينَ", en: "Indeed, Allah does not waste the reward of the doers of good." }, 
+        30: { type: "Hadith", ar: "اتَّقُوا النَّارَ وَلَوْ بِشِقِّ تَمْرَةٍ", en: "Protect yourselves from the fire, even with half a date." } };
+
+    function showView(id, btn) {
+        document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+        document.getElementById('view-' + id).classList.add('active');
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+    }
+
+    function initCalendar() {
+        const grid = document.getElementById('cal-container');
+        const start = new Date("2026-02-20"); // Updated so Day 13 = March 04, 2026
+        grid.innerHTML = '';
+        for(let i=1; i<=30; i++) {
+            const day = document.createElement('div');
+            day.className = `day-node ${i===13 ? 'today' : ''}`;
+            let d = new Date(start); d.setDate(start.getDate() + (i-1));
+            day.innerHTML = `
+                <div style="font-size:0.7rem; opacity:0.5;">${d.toDateString().split(' ')[1]} ${d.getDate()}</div>
+                <div style="font-size:1.85rem; font-weight:800; color:var(--gold);">${i}</div>
+                <div style="font-size:0.52rem; color:var(--teal); font-weight:bold;">GUIDANCE</div>
+            `;
+            day.onclick = () => openGuidance(i);
+            grid.appendChild(day);
+        }
+    }
+
+    function openGuidance(day) {
+        const g = guidanceData[day] || guidanceData[1];
+        document.getElementById('m-day-title').innerText = `Ramadan Day ${day}`;
+        document.getElementById('m-type').innerText = g.type;
+        document.getElementById('m-arabic').innerText = g.ar;
+        document.getElementById('m-english').innerText = g.en;
+        document.getElementById('guidance-modal').style.display = 'flex';
+    }
+    function closeGuidance() { document.getElementById('guidance-modal').style.display = 'none'; }
+
+    let count = 0;
+    function tap() {
+        count++;
+        document.getElementById('t-num').innerText = count;
+        document.getElementById('t-ring').style.setProperty('--p', (count % 100) + '%');
+        const ring = document.getElementById('t-ring');
+        ring.style.transform = "scale(1.06)";
+        setTimeout(() => ring.style.transform = "scale(1)", 120);
+    }
+    function resetT() {
+        count = 0;
+        document.getElementById('t-num').innerText = 0;
+        document.getElementById('t-ring').style.setProperty('--p', '0%');
+    }
+
+    window.onload = initCalendar;
+
+    // Tracker toggle with localStorage persistence (per day)
+        function toggleTrack(el) {
+            el.classList.toggle('active');
+            updateStats();
+            saveTrackerState();
+        }
+
+        function updateStats() {
+            const completed = document.querySelectorAll('.track-item.active').length;
+            const prayers = document.querySelectorAll('[data-type="prayer"].active').length;
+            document.getElementById('prayer-count').textContent = `${prayers}/5 prayers completed today`;
+            document.getElementById('extra-count').textContent = `${completed - prayers} extra goals`;
+        }
+
+        function saveTrackerState() {
+            const state = {};
+            document.querySelectorAll('.track-item').forEach(item => {
+                const text = item.querySelector('span').textContent;
+                state[text] = item.classList.contains('active');
+            });
+            localStorage.setItem('ramadanTracker_' + new Date().toDateString(), JSON.stringify(state));
+        }
+
+        function loadTrackerState() {
+            const saved = localStorage.getItem('ramadanTracker_' + new Date().toDateString());
+            if (saved) {
+                const state = JSON.parse(saved);
+                document.querySelectorAll('.track-item').forEach(item => {
+                    const text = item.querySelector('span').textContent;
+                    if (state[text]) item.classList.add('active');
+                });
+                updateStats();
+            }
+        }
+
+        // Sadaqah (simple log)
+        function saveSadaqah() {
+            const amount = document.getElementById('sadaqah-amount').value;
+            const note = document.getElementById('sadaqah-note').value.trim();
+            if (!amount || amount <= 0) return alert("Please enter a valid amount");
+            
+            const log = document.getElementById('sadaqah-log');
+            log.innerHTML += `<div style="margin:8px 0; padding:10px; background:rgba(0,0,0,0.3); border-radius:12px;">
+                <strong>PKR ${amount}</strong> - ${note || 'No note'} 
+                <small style="opacity:0.6; float:right;">${new Date().toLocaleTimeString()}</small>
+            </div>`;
+            
+            document.getElementById('sadaqah-amount').value = '';
+            document.getElementById('sadaqah-note').value = '';
+        }
+
+        // Dua List with localStorage
+        let duas = JSON.parse(localStorage.getItem('ramadanDuas')) || [];
+
+        function renderDuas() {
+            const container = document.getElementById('dua-list-container');
+            container.innerHTML = '';
+            duas.forEach((dua, index) => {
+                const div = document.createElement('div');
+                div.style.cssText = 'padding:12px 16px; background:rgba(255,255,255,0.05); border-radius:14px; margin:8px 0; display:flex; justify-content:space-between; align-items:center;';
+                div.innerHTML = `
+                    <span>${dua}</span>
+                    <button onclick="removeDua(${index})" style="background:transparent; border:none; color:var(--gold); font-size:1.1rem; cursor:pointer;">×</button>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function addDua() {
+            const input = document.getElementById('new-dua');
+            const text = input.value.trim();
+            if (!text) return;
+            duas.push(text);
+            localStorage.setItem('ramadanDuas', JSON.stringify(duas));
+            renderDuas();
+            input.value = '';
+        }
+
+        function removeDua(index) {
+            duas.splice(index, 1);
+            localStorage.setItem('ramadanDuas', JSON.stringify(duas));
+            renderDuas();
+        }
+
+        // Initialize on load
+        window.addEventListener('load', () => {
+            loadTrackerState();
+            renderDuas();
+        });
+
+        // Quran Progress
+        function updateQuranProgress() {
+            const juz = parseInt(document.getElementById('juz-select').value) || 0;
+            const lastRead = document.getElementById('last-read').value.trim();
+            const notes = document.getElementById('quran-notes').value.trim();
+
+            // Approximate % — each juz ~3.33%, but weighted roughly
+            const progress = juz * 3.333;
+            const percent = Math.min(Math.round(progress), 100);
+
+            // Update ring
+            document.getElementById('quran-ring').style.setProperty('--progress', percent + '%');
+            document.getElementById('progress-percent').textContent = percent + '%';
+
+            // Motivation
+            const mot = document.getElementById('motivation');
+            if (percent >= 90) {
+                mot.textContent = "MashaAllah! Almost there — may Allah accept your khatm! 🤲";
+                mot.style.color = "var(--gold)";
+            } else if (percent >= 50) {
+                mot.textContent = "Halfway beautiful! Keep the barakah flowing 🌟";
+            } else if (percent > 0) {
+                mot.textContent = "Alhamdulillah for the start — every page brings you closer 🤍";
+            }
+
+            // Save to localStorage
+            localStorage.setItem('quranProgress', JSON.stringify({
+                juz: juz,
+                lastRead: lastRead,
+                notes: notes,
+                percent: percent,
+                date: new Date().toDateString()
+            }));
+        }
+
+        function loadQuranProgress() {
+            const saved = localStorage.getItem('quranProgress');
+            if (saved) {
+                const data = JSON.parse(saved);
+                // Only load if same day (optional - remove if you want permanent)
+                if (data.date === new Date().toDateString()) {
+                    document.getElementById('juz-select').value = data.juz;
+                    document.getElementById('last-read').value = data.lastRead;
+                    document.getElementById('quran-notes').value = data.notes;
+                    document.getElementById('quran-ring').style.setProperty('--progress', data.percent + '%');
+                    document.getElementById('progress-percent').textContent = data.percent + '%';
+
+                    // Motivation on load
+                    const mot = document.getElementById('motivation');
+                    if (data.percent >= 90) mot.textContent = "MashaAllah! Almost there — may Allah accept your khatm! 🤲";
+                }
+            }
+        }
+
+        // Load on page init
+        window.addEventListener('load', loadQuranProgress);
+
+        // Gratitude
+        function insertEmoji(emoji) {
+            const textarea = document.getElementById('gratitude-text');
+            const start = textarea.selectionStart;
+            const end = textarea.selectionEnd;
+            textarea.value = textarea.value.substring(0, start) + emoji + textarea.value.substring(end);
+            textarea.selectionStart = textarea.selectionEnd = start + emoji.length;
+            textarea.focus();
+            updateCharCount();
+        }
+
+        function updateCharCount() {
+            const text = document.getElementById('gratitude-text').value;
+            document.getElementById('char-count').textContent = text.length;
+            if (text.length > 300) {
+                document.getElementById('char-count').style.color = 'var(--ashra3)';
+            } else {
+                document.getElementById('char-count').style.color = '';
+            }
+        }
+
+        function saveGratitude() {
+            const text = document.getElementById('gratitude-text').value.trim();
+            if (!text) return;
+            
+            const today = new Date().toDateString();
+            localStorage.setItem('gratitude_' + today, text);
+            
+            // Show saved message
+            document.getElementById('today-gratitude-display').textContent = text;
+            document.getElementById('gratitude-saved').style.display = 'block';
+            
+            // Add to history
+            addToGratitudeHistory(today, text);
+            
+            // Clear input
+            document.getElementById('gratitude-text').value = '';
+            updateCharCount();
+        }
+
+        function addToGratitudeHistory(date, text) {
+            const container = document.getElementById('gratitude-history');
+            const entry = document.createElement('div');
+            entry.style.cssText = 'padding:12px; background:rgba(0,0,0,0.3); border-radius:12px; margin:8px 0;';
+            entry.innerHTML = `<small style="opacity:0.6;">${date}</small><p style="margin:6px 0;">${text}</p>`;
+            container.prepend(entry);
+        }
+
+        function loadGratitude() {
+            const today = new Date().toDateString();
+            const savedToday = localStorage.getItem('gratitude_' + today);
+            if (savedToday) {
+                document.getElementById('today-gratitude-display').textContent = savedToday;
+                document.getElementById('gratitude-saved').style.display = 'block';
+            }
+            
+            // Load history (last 7 days for example)
+            for (let i = 1; i <= 7; i++) {
+                const pastDate = new Date();
+                pastDate.setDate(pastDate.getDate() - i);
+                const key = 'gratitude_' + pastDate.toDateString();
+                const past = localStorage.getItem(key);
+                if (past) addToGratitudeHistory(pastDate.toDateString(), past);
+            }
+            
+            document.getElementById('gratitude-text').addEventListener('input', updateCharCount);
+        }
+
+        // Dua List
+        let duaList = JSON.parse(localStorage.getItem('ramadanDuaList')) || [];
+
+        function renderDuaList() {
+            const container = document.getElementById('dua-list-container');
+            container.innerHTML = '';
+            
+            duaList.forEach((item, index) => {
+                const div = document.createElement('div');
+                div.className = `dua-item ${item.priority}`;
+                div.draggable = true;
+                div.dataset.index = index;
+                div.innerHTML = `
+                    <span>${item.text}</span>
+                    <button class="remove-btn" onclick="removeDua(${index})">×</button>
+                `;
+                
+                // Drag & drop reordering
+                div.addEventListener('dragstart', e => {
+                    e.dataTransfer.setData('text/plain', index);
+                });
+                div.addEventListener('dragover', e => e.preventDefault());
+                div.addEventListener('drop', e => {
+                    e.preventDefault();
+                    const fromIndex = parseInt(e.dataTransfer.getData('text/plain'));
+                    const toIndex = parseInt(e.currentTarget.dataset.index);
+                    if (fromIndex !== toIndex) {
+                        const [moved] = duaList.splice(fromIndex, 1);
+                        duaList.splice(toIndex, 0, moved);
+                        localStorage.setItem('ramadanDuaList', JSON.stringify(duaList));
+                        renderDuaList();
+                    }
+                });
+                
+                container.appendChild(div);
+            });
+        }
+
+        function addDuaEntry() {
+            const text = document.getElementById('new-dua-input').value.trim();
+            const priority = document.getElementById('dua-priority').value;
+            if (!text) return;
+            
+            duaList.push({ text, priority });
+            localStorage.setItem('ramadanDuaList', JSON.stringify(duaList));
+            renderDuaList();
+            
+            document.getElementById('new-dua-input').value = '';
+        }
+
+        function removeDua(index) {
+            duaList.splice(index, 1);
+            localStorage.setItem('ramadanDuaList', JSON.stringify(duaList));
+            renderDuaList();
+        }
+
+        // Initialize
+        window.addEventListener('load', () => {
+            loadGratitude();
+            renderDuaList();
+        });
+
+        // Tasbih Enhanced
+        let tasbihCount = 0;
+        let currentDhikr = "subhanallah";
+        let currentTarget = 33;
+        let currentColor = "var(--gold)";
+
+        function selectDhikr(btn) {
+            document.querySelectorAll('.dhikr-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            
+            currentDhikr = btn.dataset.dhikr;
+            currentTarget = parseInt(btn.dataset.target);
+            currentColor = currentDhikr === "subhanallah" ? "var(--gold)" :
+                        currentDhikr === "alhamdulillah" ? "var(--teal)" : "var(--gold-light)";
+            
+            document.getElementById('current-dhikr').textContent = 
+                currentDhikr === "subhanallah" ? "Subḥānallāh" :
+                currentDhikr === "alhamdulillah" ? "Alḥamdulillāh" : "Allāhu Akbar";
+            
+            document.getElementById('t-target').textContent = `/ ${currentTarget}`;
+            document.getElementById('tasbih-ring').style.setProperty('--current-color', currentColor);
+            
+            loadTodayTasbih(); // refresh count if changed
+        }
+
+        function tapTasbih() {
+            tasbihCount++;
+            document.getElementById('t-num').textContent = tasbihCount;
+            
+            const progress = Math.min((tasbihCount / currentTarget) * 100, 100);
+            document.getElementById('tasbih-ring').style.setProperty('--progress', progress + '%');
+            
+            // Vibration on mobile
+            if (navigator.vibrate) navigator.vibrate(15);
+            
+            // Motivation
+            const status = document.getElementById('tasbih-status');
+            if (tasbihCount >= currentTarget) {
+                status.textContent = `MashaAllah! ${currentTarget} ${currentDhikr} completed 🤲`;
+                status.style.color = "var(--gold)";
+            } else if (tasbihCount > currentTarget * 2) {
+                status.textContent = "Keep going — your dhikr is beautiful 🌟";
+            }
+            
+            saveTodayTasbih();
+        }
+
+        function resetTasbih() {
+            tasbihCount = 0;
+            document.getElementById('t-num').textContent = 0;
+            document.getElementById('tasbih-ring').style.setProperty('--progress', '0%');
+            document.getElementById('tasbih-status').textContent = "Counter reset — begin again بِسْمِ ٱللَّٰهِ";
+            saveTodayTasbih();
+        }
+
+        function clearTodayTasbih() {
+            const today = new Date().toDateString();
+            localStorage.removeItem('tasbihCount_' + today);
+            resetTasbih();
+        }
+
+        function saveTodayTasbih() {
+            const today = new Date().toDateString();
+            localStorage.setItem('tasbihCount_' + today, JSON.stringify({
+                count: tasbihCount,
+                dhikr: currentDhikr,
+                target: currentTarget
+            }));
+        }
+
+        function loadTodayTasbih() {
+            const today = new Date().toDateString();
+            const saved = localStorage.getItem('tasbihCount_' + today);
+            if (saved) {
+                const data = JSON.parse(saved);
+                tasbihCount = data.count;
+                document.getElementById('t-num').textContent = tasbihCount;
+                
+                const progress = Math.min((tasbihCount / currentTarget) * 100, 100);
+                document.getElementById('tasbih-ring').style.setProperty('--progress', progress + '%');
+                
+                if (tasbihCount >= currentTarget) {
+                    document.getElementById('tasbih-status').textContent = `MashaAllah! ${currentTarget} ${currentDhikr} completed 🤲`;
+                }
+            } else {
+                tasbihCount = 0;
+            }
+        }
+
+        // Init
+        window.addEventListener('load', () => {
+            loadTodayTasbih();
+            // Auto-select first one
+            document.querySelector('.dhikr-btn').click();
+        });
+
+        function addMealItem(type) {
+        const input = document.getElementById(type + '-new');
+        const text = input.value.trim();
+        if (!text) return;
+
+        const container = document.getElementById(type + '-items');
+        const item = document.createElement('div');
+        item.style.cssText = 'padding:10px 14px; background:rgba(255,255,255,0.05); border-radius:12px; margin:8px 0; display:flex; justify-content:space-between;';
+        item.innerHTML = `<span>${text}</span><button style="background:none;border:none;color:#ef4444;cursor:pointer;" onclick="this.parentElement.remove()">×</button>`;
+        container.appendChild(item);
+        input.value = '';
+    }
+
+    function saveMealPlan() {
+        const today = new Date().toDateString();
+        const suhoor = Array.from(document.querySelectorAll('#suhoor-items > div span')).map(s => s.textContent);
+        const iftar = Array.from(document.querySelectorAll('#iftar-items > div span')).map(s => s.textContent);
+
+        localStorage.setItem('mealPlan_' + today, JSON.stringify({ suhoor, iftar }));
+        document.getElementById('meal-status').textContent = 'Menu saved for today • May Allah make it easy & blessed 🤲';
+        setTimeout(() => document.getElementById('meal-status').textContent = '', 4000);
+    }
+
+    function loadMealPlan() {
+        const today = new Date().toDateString();
+        const saved = localStorage.getItem('mealPlan_' + today);
+        if (saved) {
+            const data = JSON.parse(saved);
+            const suhoorCont = document.getElementById('suhoor-items');
+            const iftarCont = document.getElementById('iftar-items');
+            suhoorCont.innerHTML = '';
+            iftarCont.innerHTML = '';
+            data.suhoor.forEach(item => {
+                const div = document.createElement('div');
+                div.style.cssText = 'padding:10px 14px; background:rgba(255,255,255,0.05); border-radius:12px; margin:8px 0; display:flex; justify-content:space-between;';
+                div.innerHTML = `<span>${item}</span><button style="background:none;border:none;color:#ef4444;cursor:pointer;" onclick="this.parentElement.remove()">×</button>`;
+                suhoorCont.appendChild(div);
+            });
+            data.iftar.forEach(item => {
+                const div = document.createElement('div');
+                div.style.cssText = 'padding:10px 14px; background:rgba(255,255,255,0.05); border-radius:12px; margin:8px 0; display:flex; justify-content:space-between;';
+                div.innerHTML = `<span>${item}</span><button style="background:none;border:none;color:#ef4444;cursor:pointer;" onclick="this.parentElement.remove()">×</button>`;
+                iftarCont.appendChild(div);
+            });
+        }
+    }
+
+    window.addEventListener('load', loadMealPlan);
+
+    // Mobile menu toggle ── improved version
+const menuToggle = document.getElementById('menu-toggle');
+const sidebar = document.getElementById('sidebar');
+
+if (menuToggle && sidebar) {
+    menuToggle.addEventListener('click', () => {
+        sidebar.classList.toggle('open');
+        // Optional: prevent body scroll when menu is open
+        document.body.classList.toggle('menu-open');
+    });
+
+    // Close menu when clicking any nav button (good UX on mobile)
+    document.querySelectorAll('#sidebar .nav-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            if (window.innerWidth <= 1023) {
+                sidebar.classList.remove('open');
+                document.body.classList.remove('menu-open');
+            }
+        });
+    });
+
+    // Close menu when clicking outside (optional but nice)
+    document.addEventListener('click', function(e) {
+        if (window.innerWidth > 1023) return;
+        if (!sidebar.contains(e.target) && !menuToggle.contains(e.target)) {
+            sidebar.classList.remove('open');
+            document.body.classList.remove('menu-open');
+        }
+    });
+}
+</script>
+</body>
+</html>
